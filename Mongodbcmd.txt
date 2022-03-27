@@ -1,0 +1,457 @@
+To learn more about other mongoimport supported formats check out this documentation page.
+
+SRV connection string - a specific format used to establish a connection between your application and a MongoDB instance. Click here to learn more.
+
+Code used in this lecture:
+
+mongodump --uri "mongodb+srv://<your username>:<your password>@<your cluster>.mongodb.net/sample_supplies"
+
+mongoexport --uri="mongodb+srv://<your username>:<your password>@<your cluster>.mongodb.net/sample_supplies" --collection=sales --out=sales.json
+
+mongorestore --uri "mongodb+srv://<your username>:<your password>@<your cluster>.mongodb.net/sample_supplies"  --drop dump
+
+mongoimport --uri="mongodb+srv://<your username>:<your password>@<your cluster>.mongodb.net/sample_supplies" --drop sales.json
+
+
+
+Chapter 2: Importing and Exporting the Data
+
+In this lesson we used the following commands:
+
+Connect to the Atlas cluster:
+
+mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"
+
+command fir vieq all db = show dbs
+
+command for using the db = use sample_training
+
+command for view collections = show collections
+
+command for find = db.zips.find({"state": "NY"})
+
+it iterates through the cursor.
+
+command for count =  db.zips.find({"state": "NY"}).count()
+
+command for find = db.zips.find({"state": "NY", "city": "ALBANY"})
+
+command for sorted visualization= db.zips.find({"state": "NY", "city": "ALBANY"}).pretty()
+
+
+Chapter 3: creating and Manipulating documents
+In this lesson we used the following commands:
+
+Step one: Connect to the Atlas cluster
+
+mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"
+
+Step two: navigate to the database that we need:
+use sample_training
+
+Step three, get a random document from the collection:
+db.inspections.findOne();
+
+Step four, copy this random document, and try to insert in into the collection:
+db.inspections.insert({
+      "_id" : ObjectId("56d61033a378eccde8a8354f"),
+      "id" : "10021-2015-ENFO",
+      "certificate_number" : 9278806,
+      "business_name" : "ATLIXCO DELI GROCERY INC.",
+      "date" : "Feb 20 2015",
+      "result" : "No Violation Issued",
+      "sector" : "Cigarette Retail Dealer - 127",
+      "address" : {
+              "city" : "RIDGEWOOD",
+              "zip" : 11385,
+              "street" : "MENAHAN ST",
+              "number" : 1712
+         }
+  })
+
+db.inspections.insert({
+      "id" : "10021-2015-ENFO",
+      "certificate_number" : 9278806,
+      "business_name" : "ATLIXCO DELI GROCERY INC.",
+      "date" : "Feb 20 2015",
+      "result" : "No Violation Issued",
+      "sector" : "Cigarette Retail Dealer - 127",
+      "address" : {
+              "city" : "RIDGEWOOD",
+              "zip" : 11385,
+              "street" : "MENAHAN ST",
+              "number" : 1712
+         }
+  })
+
+db.inspections.find({"id" : "10021-2015-ENFO", "certificate_number" : 9278806}).pretty()
+
+
+
+
+Insert three test documents: db.inspections.insert([ { "test": 1 }, { "test": 2 }, { "test": 3 } ])
+
+Insert three test documents but specify the _id values:  db.inspections.insert([{ "_id": 1, "test": 1 },{ "_id": 1, "test": 2 },
+                       { "_id": 3, "test": 3 }])
+
+
+Find the documents with _id: 1 
+db.inspections.find({ "_id": 1 })
+
+Insert multiple documents specifying the _id values, and using the "ordered": false option.
+
+db.inspections.insert([{ "_id": 1, "test": 1 },{ "_id": 1, "test": 2 },{ "_id": 3, "test": 3 }],{ "ordered": false })
+
+
+
+Insert multiple documents with _id: 1 with the default "ordered": true setting
+
+db.inspection.insert([{ "_id": 1, "test": 1 },{ "_id": 3, "test": 3 }])
+
+
+View collections in the active db
+show collections
+
+Switch the active db to training
+
+use training
+
+
+View all available databases
+show dbs
+
+
+
+Commands used in this lesson:
+
+Connect to your Atlas Cluster.
+
+
+
+mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"
+
+
+Use the sample_training database as your database in the following commands.
+use sample_training
+
+
+Find all documents in the zips collection where the zip field is equal to "12434".
+db.zips.find({ "zip": "12534" }).pretty()
+
+
+Find all documents in the zips collection where the city field is equal to "HUDSON".
+db.zips.find({ "city": "HUDSON" }).pretty()
+
+
+Find how many documents in the zips collection have the city field equal to "HUDSON".
+db.zips.find({ "city": "HUDSON" }).count()
+
+
+Update all documents in the zips collection where the city field is equal to "HUDSON" by adding 10 to the current value of the "pop" field.
+db.zips.updateMany({ "city": "HUDSON" }, { "$inc": { "pop": 10 } })
+
+
+Update a single document in the zips collection where the zip field is equal to "12534" by setting the value of the "pop" field to 17630.
+db.zips.updateOne({ "zip": "12534" }, { "$set": { "pop": 17630 } })
+
+
+Update a single document in the zips collection where the zip field is equal to "12534" by setting the value of the "population" field to 17630.
+db.zips.updateOne({ "zip": "12534" }, { "$set": { "population": 17630 } })
+
+
+Find all documents in the grades collection where the student_id field is 151 , and the class_id field is 339.
+db.grades.find({ "student_id": 151, "class_id": 339 }).pretty()
+
+
+Find all documents in the grades collection where the student_id field is 250 , and the class_id field is 339.
+db.grades.find({ "student_id": 250, "class_id": 339 }).pretty()
+
+
+Update one document in the grades collection where the student_id is ``250`` *, and the class_id field is 339 , by adding a document element to the "scores" array.
+db.grades.updateOne({ "student_id": 250, "class_id": 339 }, { "$push": { "scores": { "type": "extra credit","score": 100 } } })
+
+
+
+Deleting documents and collections
+
+Commands used in this lesson:
+mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"
+use sample_training
+
+
+Look at all the docs that have test field equal to 1.
+db.inspections.find({ "test": 1 }).pretty()
+
+
+Look at all the docs that have test field equal to 3.
+db.inspections.find({ "test": 3 }).pretty()
+
+
+Delete all the documents that have test field equal to 1.
+db.inspections.deleteMany({ "test": 1 })
+
+
+Delete one document that has test field equal to 3.
+db.inspections.deleteOne({ "test": 3 })
+
+
+Inspect what is left of the inspection collection.
+db.inspection.find().pretty()
+
+View what collections are present in the sample_training collection.
+show collections
+
+Drop the inspection collection.
+db.inspection.drop()
+
+
+
+Chapter 4: Advanced CRUD Operations
+
+Query Operators - Comparison
+
+This lesson used the following commands:
+
+Connect to the Atlas cluster:
+mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"
+
+
+Switch to this database:
+use sample_training
+
+
+Find all documents where the tripduration was less than or equal to 70 seconds and the usertype was not Subscriber:
+db.trips.find({ "tripduration": { "$lte" : 70 },"usertype": { "$ne": "Subscriber" } }).pretty()
+
+Find all documents where the tripduration was less than or equal to 70 seconds and the usertype was Customer using a redundant equality operator:
+db.trips.find({ "tripduration": { "$lte" : 70 },"usertype": { "$eq": "Customer" }}).pretty()
+
+
+Find all documents where the tripduration was less than or equal to 70 seconds and the usertype was Customer using the implicit equality operator:
+db.trips.find({ "tripduration": { "$lte" : 70 },"usertype": "Customer" }).pretty()
+
+
+Query Operators - Logic
+
+This lesson used the following commands:
+
+Connect to the Atlas cluster:
+mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"
+
+Switch to this database:
+use sample_training
+
+Find all documents where airplanes CR2 or A81 left or landed in the KZN airport:
+db.routes.find({ "$and": [ { "$or" :[ { "dst_airport": "KZN" },{ "src_airport": "KZN" }] },{ "$or" :[ { "airplane": "CR2" },{ "airplane": "A81" } ] }
+                         ]}).pretty()()
+
+
+Expressive Query Operator
+
+This lesson used the following commands:
+
+Connect to the Atlas cluster:
+mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"
+
+Switch to this database:
+use sample_training
+
+Find all documents where the trip started and ended at the same station:
+db.trips.find({ "$expr": { "$eq": [ "$end station id", "$start station id"] }
+              }).count()
+
+Find all documents where the trip lasted longer than 1200 seconds, and started and ended at the same station:
+db.trips.find({ "$expr": { "$and": [ { "$gt": [ "$tripduration", 1200 ]},
+                         { "$eq": [ "$end station id", "$start station id" ]}
+                       ]}}).count()
+
+
+
+Expressive Query Operator
+
+
+This lesson used the following commands:
+
+Connect to the Atlas cluster:
+mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"
+
+
+Switch to this database:
+use sample_training
+
+
+Find all documents where the trip started and ended at the same station:
+db.trips.find({ "$expr": { "$eq": [ "$end station id", "$start station id"] }
+              }).count()
+
+
+Find all documents where the trip lasted longer than 1200 seconds, and started and ended at the same station:
+db.trips.find({ "$expr": { "$and": [ { "$gt": [ "$tripduration", 1200 ]},
+                         { "$eq": [ "$end station id", "$start station id" ]}
+                       ]}}).count()
+
+
+Array Operators and Projection
+
+Commands used in this lesson:
+
+Connect to the Atlas cluster:
+mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"
+
+Switch to this database:
+use sample_airbnb
+
+Find all documents with exactly 20 amenities which include all the amenities listed in the query array, and display their price and address:
+db.listingsAndReviews.find({ "amenities":
+        { "$size": 20, "$all": [ "Internet", "Wifi",  "Kitchen", "Heating",
+                                 "Family/kid friendly", "Washer", "Dryer",
+                                 "Essentials", "Shampoo", "Hangers",
+                                 "Hair dryer", "Iron",
+                                 "Laptop friendly workspace" ] } },
+                            {"price": 1, "address": 1}).pretty()
+
+Find all documents that have Wifi as one of the amenities only include price and address in the resulting cursor:
+db.listingsAndReviews.find({ "amenities": "Wifi" },
+                           { "price": 1, "address": 1, "_id": 0 }).pretty()
+
+Find all documents that have Wifi as one of the amenities only include price and address in the resulting cursor, also exclude ``"maximum_nights"``. **This will be an error:*
+db.listingsAndReviews.find({ "amenities": "Wifi" },
+                           { "price": 1, "address": 1,
+                             "_id": 0, "maximum_nights":0 }).pretty()
+
+Switch to this database:
+use sample_training
+
+Get one document from the collection:
+db.grades.findOne()
+
+
+
+Find all documents where the student in class 431 received a grade higher than 85 for any type of assignment:
+db.grades.find({ "class_id": 431 },
+               { "scores": { "$elemMatch": { "score": { "$gt": 85 } } }
+             }).pretty()
+
+Find all documents where the student had an extra credit score:
+db.grades.find({ "scores": { "$elemMatch": { "type": "extra credit" } }
+               }).pretty()
+
+   
+	Array Operators and Sub-Documents
+Commands used in this lesson:
+
+Connect to the Atlas cluster:
+mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"
+
+use sample_training
+
+db.trips.findOne({ "start station location.type": "Point" })
+
+db.companies.find({ "relationships.0.person.last_name": "Zuckerberg" },
+                  { "name": 1 }).pretty()
+
+db.companies.find({ "relationships.0.person.first_name": "Mark",
+                    "relationships.0.title": { "$regex": "CEO" } },
+                  { "name": 1 }).count()
+
+
+db.companies.find({ "relationships.0.person.first_name": "Mark",
+                    "relationships.0.title": {"$regex": "CEO" } },
+                  { "name": 1 }).pretty()
+
+db.companies.find({ "relationships":
+                      { "$elemMatch": { "is_past": true,
+                                        "person.first_name": "Mark" } } },
+                  { "name": 1 }).pretty()
+
+db.companies.find({ "relationships":
+                      { "$elemMatch": { "is_past": true,
+                                        "person.first_name": "Mark" } } },
+                  { "name": 1 }).count()
+
+
+
+
+	Aggregation Framework
+
+
+Commands used in this lesson:
+
+Connect to the Atlas cluster:
+mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"
+
+Switch to this database:
+use sample_airbnb
+
+Find all documents that have Wifi as one of the amenities. Only include price and address in the resulting cursor.
+db.listingsAndReviews.find({ "amenities": "Wifi" },
+                           { "price": 1, "address": 1, "_id": 0 }).pretty()
+
+Using the aggregation framework find all documents that have Wifi as one of the amenities``*. Only include* ``price and address in the resulting cursor.
+db.listingsAndReviews.aggregate([
+                                  { "$match": { "amenities": "Wifi" } },
+                                  { "$project": { "price": 1,
+                                                  "address": 1,
+                                                  "_id": 0 }}]).pretty()
+
+Find one document in the collection and only include the address field in the resulting cursor.
+db.listingsAndReviews.findOne({ },{ "address": 1, "_id": 0 })
+
+Project only the address field value for each document, then group all documents into one document per address.country value.
+db.listingsAndReviews.aggregate([ { "$project": { "address": 1, "_id": 0 }},
+                                  { "$group": { "_id": "$address.country" }}])
+
+Project only the address field value for each document, then group all documents into one document per address.country value, and count one for each document in each group.
+db.listingsAndReviews.aggregate([
+                                  { "$project": { "address": 1, "_id": 0 }},
+                                  { "$group": { "_id": "$address.country",
+                                                "count": { "$sum": 1 } } }
+                                ])
+
+
+Chapter 5: Indexing and Aggregation Pipeline
+
+sort() and limit()
+Commands used in this lesson:
+
+Connect to the Atlas cluster:
+mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"
+
+use sample_training
+
+db.zips.find().sort({ "pop": 1 }).limit(1)
+
+db.zips.find({ "pop": 0 }).count()
+
+db.zips.find().sort({ "pop": -1 }).limit(1)
+
+db.zips.find().sort({ "pop": -1 }).limit(10)
+
+db.zips.find().sort({ "pop": 1, "city": -1 })
+
+
+Chapter 5: Indexing and Aggregation Pipeline
+
+Introduction to Indexes
+Commands used in this lesson:
+mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"
+
+use sample_training
+
+db.trips.find({ "birth year": 1989 })
+
+db.trips.find({ "start station id": 476 }).sort( { "birth year": 1 } )
+
+db.trips.createIndex({ "birth year": 1 })
+
+db.trips.createIndex({ "start station id": 1, "birth year": 1 })
+
+
+
+Upsert - Update or Insert?
+Commands used in this lesson:
+db.iot.updateOne({ "sensor": r.sensor, "date": r.date,
+                   "valcount": { "$lt": 48 } },
+                         { "$push": { "readings": { "v": r.value, "t": r.time } },
+                        "$inc": { "valcount": 1, "total": r.value } },
+                 { "upsert": true })
